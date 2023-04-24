@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Edit Transaction</h1>
-    <form action="/transaction/edit/<%= transaction._id %>" method="POST">
+    <form action="/transactions/edit/<%= transaction._id %>" method="POST">
         <div>
             <label for="description">Description:</label>
             <input type="text" id="description" name="description" value="<%= transaction.description %>" required>

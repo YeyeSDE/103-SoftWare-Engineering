@@ -24,18 +24,18 @@ router.get('/transaction', isLoggedIn, async(req, res, next) => {
         // render the view called 'transactions' and pass the transactions object to the view as data
         res.render('transaction', { transactions })
     } catch (error) {
-        res.status(500).jason({message: error.message});
+        res.status(500).json({message: error.message});
     } 
 });
 
 // render the new transaction page
 router.get('/transactions/new', isLoggedIn, (req, res) => {
     // render the view called 'New Tansaction'
-    res.render('New Transaction');
+    res.render('newTransaction');
 });
 
 // handle the post request to the transaction route
-router.post('/transactions/new', isLoggedIn, async(req, res, next) => {
+router.post('/transactions/new', isLoggedIn, async(req, res) => {
     try {
         // create a new transaction object with the data from the request body
         const transaction = new Transaction ({
@@ -51,7 +51,7 @@ router.post('/transactions/new', isLoggedIn, async(req, res, next) => {
     // catch the error
     } catch (error) {
         // send a 500 Internal Server Error response with the error message 
-        res.status(500).jason({ message: error.message });
+        res.status(500).json({ message: error.message });
     }   
 });
 
@@ -59,13 +59,13 @@ router.post('/transactions/new', isLoggedIn, async(req, res, next) => {
 router.get('/transactions/edit/:id', isLoggedIn, async(req, res) => {
     try {
         // find the transaction from the database with the requeste id
-        const transaction = await Transaction.findById(req.params,id);
-        // render the view called 'Edit Transaction' and pass the transaction to the view as data
-        res.render('Edit Transaction', { transaction });
+        const transaction = await Transaction.findById(req.params.id);
+        // render the editeTransaction view and pass the transaction to the view as data
+        res.render('editTransaction', { transaction });
     // catch the error
     } catch (error) {
         // render the 500 status with error message
-        res.status (500).jason({ message: error.message});
+        res.status (500).json({ message: error.message});
     }
 });
 
@@ -75,7 +75,7 @@ router.post ('/transactions/edit/:id', isLoggedIn, async(req, res) => {
         // find and upate the transaction from the input id from the request
         await Transaction.findByIdAndUpdate(req.params.id, {
             description: req.body.description,
-            amount: req.body.amout,
+            amount: req.body.amount,
             category: req.body.category,
             date: req.body.date
         });
@@ -89,10 +89,10 @@ router.post ('/transactions/edit/:id', isLoggedIn, async(req, res) => {
 });
 
 //delete a transaction
-router.get('/transactions/edit/:id', isLoggedIn, async(req, res) => {
+router.get('/transactions/delete/:id', isLoggedIn, async(req, res) => {
     try {
-        await Transaction.findOneAndDelete(req.params.id);
-        res.redirect('/transaction');
+        await Transaction.findByIdAndDelete(req.params.id);
+        res.redirect('/transactions');
     } catch (error) {
         res.status(500).json({ message: error.message});
     }
